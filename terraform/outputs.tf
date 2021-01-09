@@ -14,6 +14,6 @@ output "private_ip" {
   value = data.aws_instance.web.private_ip
 }
 
-output "network_id" {
+output "subnet_id" {
   value = data.aws_instance.web.subnet_id
 }

@@ -22,14 +22,15 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
-data "aws_instance" "web" {}
+data aws_instance "web" {
+  instance_id = aws_instance.web.id
+}
 
 resource "aws_instance" "web" {
-  count = 1
   ami = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
-  cpu_core_count = 1
-  cpu_threads_per_core = 1
+//  cpu_core_count = 1
+//  cpu_threads_per_core = 1
   tags = {
     Name = "HelloNetology"
   }
