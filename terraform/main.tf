@@ -2,6 +2,11 @@ provider "aws" {
   region = "us-west-2"
 }
 
+//resource "aws_s3_bucket" "test_bucket" {
+//  bucket = "test-bucket-netology-91nickel"
+//  acl = "private"
+//}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -23,15 +28,47 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 data aws_instance "web" {
-  instance_id = aws_instance.web.id
+  for_each = local.instances[terraform.workspace]
+  instance_id = aws_instance.web[each.key].id
+}
+
+locals {
+  vm_count = {
+    prod = "2"
+    stage = "1"
+  }
+  vm_instance_type = {
+    prod = "t2.small"
+    stage = "t2.micro"
+  }
+  instances = {
+    stage = {
+      0 = "t2.micro"
+    }
+    prod = {
+      0 = "t2.small"
+      1 = "t2.small"
+    }
+  }
 }
 
 resource "aws_instance" "web" {
+  for_each = local.instances[terraform.workspace]
+  instance_type = each.value
   ami = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
-//  cpu_core_count = 1
-//  cpu_threads_per_core = 1
   tags = {
     Name = "HelloNetology"
   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
+
+//resource "aws_instance" "web" {
+//  count = local.vm_count[terraform.workspace]
+//  ami = data.aws_ami.ubuntu.id
+//  instance_type = local.vm_instance_type[terraform.workspace]
+//  tags = {
+//    Name = "HelloNetology"
+//  }
+//}

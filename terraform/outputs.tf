@@ -10,10 +10,10 @@ output "region_name" {
   value = data.aws_region.current.name
 }
 
-output "private_ip" {
-  value = data.aws_instance.web.private_ip
-}
+//output "private_ip" {
+//  value = data.aws_instance.web.private_ip
+//}
 
-output "subnet_id" {
-  value = data.aws_instance.web.subnet_id
-}
+//output "subnet_id" {
+//  value = data.aws_instance.web.subnet_id
+//}
